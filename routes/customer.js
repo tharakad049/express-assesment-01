@@ -35,6 +35,13 @@ router.post('/', (req, res) => {
         }
     })
 })
+router.get('/', (req, res) => {
+    var getAllQuery = "SELECT * FROM customer";
+    connection.query(getAllQuery, (err, rows) => {
+        if (err) console.log(err);
+        res.send(rows);
+    })
+})
 router.get('/:id', (req, res) => {
     const id = req.params.id;
     var searchQuery = "SELECT * FROM customer WHERE id=?"
@@ -54,6 +61,20 @@ router.put('/', (req, res) => {
         if (err) console.log(err);
         if (rows.affectedRows > 0) {
             res.send({ "message": "customer updated" })
+        } else {
+            res.send({ "message": "customer not found" })
+        }
+    })
+})
+router.delete('/:id', (req, res) => {
+    const id = req.params.id;
+    var deleteQuery = "DELETE FROM customer WHERE id=?";
+
+    connection.query(deleteQuery, [id], (err, rows) => {
+        if (err) console.log(err);
+
+        if (rows.affectedRows > 0) {
+            res.send({ "message": "customer deleted" })
         } else {
             res.send({ "message": "customer not found" })
         }
