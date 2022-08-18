@@ -29,9 +29,33 @@ router.post('/', (req, res) => {
 
     connection.query(saveQuery, [id, name, address, salary], (err) => {
         if (err) {
-            res.send({ "message": "duplicate entry" })
+            res.send({ "message": "Duplicate entry" })
         } else {
             res.send({ "message": "Customer saved" })
+        }
+    })
+})
+router.get('/:id', (req, res) => {
+    const id = req.params.id;
+    var searchQuery = "SELECT * FROM customer WHERE id=?"
+    connection.query(searchQuery, [id], (err, row) => {
+        if (err) console.log(err);
+        res.send(row);
+    })
+})
+router.put('/', (req, res) => {
+    const id = req.body.id
+    const name = req.body.name
+    const address = req.body.address
+    const salary = req.body.salary
+
+    var Query = "UPDATE customer SET name=?, address=?, salary=? WHERE id=?";
+    connection.query(Query, [name, address, salary, id], (err, rows) => {
+        if (err) console.log(err);
+        if (rows.affectedRows > 0) {
+            res.send({ "message": "customer updated" })
+        } else {
+            res.send({ "message": "customer not found" })
         }
     })
 })
