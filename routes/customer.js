@@ -19,4 +19,20 @@ connection.connect(function (err) {
     }
 })
 
+router.post('/', (req, res) => {
+    const id = req.body.id;
+    const name = req.body.name;
+    const address = req.body.address;
+    const salary = req.body.salary;
+
+    var saveQuery = "INSERT INTO customer(id,name,address,salary) VALUES(?,?,?,?)";
+
+    connection.query(saveQuery, [id, name, address, salary], (err) => {
+        if (err) {
+            res.send({ "message": "duplicate entry" })
+        } else {
+            res.send({ "message": "Customer saved" })
+        }
+    })
+})
 module.exports = router;
