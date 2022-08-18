@@ -12,7 +12,7 @@ connection.connect(function (err) {
         var itemTable = "CREATE TABLE IF NOT EXISTS item (code VARCHAR(255) PRIMARY KEY, description TEXT, qtyOnHand INT, unitPrice DOUBLE)"
         connection.query(itemTable, function (err, result) {
             if (result.warningCount === 0) {
-                console.log("table created");
+                console.log("item table created");
             }
         })
     }
@@ -22,9 +22,7 @@ router.post('/', (req, res) => {
     const description = req.body.description
     const qtyOnHand = req.body.qtyOnHand
     const unitPrice = req.body.unitPrice
-
     var saveItemQuery = "INSERT INTO item(code,description,qtyOnHand,unitPrice) VALUES(?,?,?,?)";
-
     connection.query(saveItemQuery, [code, description, qtyOnHand, unitPrice], (err) => {
         if (err) {
             res.send({ "message": "duplicate entry" })
@@ -53,11 +51,9 @@ router.put('/', (req, res) => {
     const description = req.body.description
     const qtyOnHand = req.body.qtyOnHand
     const unitPrice = req.body.unitPrice
-
     var updateItemQuery = "UPDATE item SET description=?, qtyOnHand=?, unitPrice=? WHERE code=?";
     connection.query(updateItemQuery, [description, qtyOnHand, unitPrice, code], (err, rows) => {
         if (err) console.log(err);
-
         if (rows.affectedRows > 0) {
             res.send({ "message": "item updated" })
         } else {
@@ -70,7 +66,6 @@ router.delete('/:code', (req, res) => {
     var deleteItemQuery = "DELETE FROM item WHERE code=?";
     connection.query(deleteItemQuery, [code], (err, rows) => {
         if (err) console.log(err);
-
         if (rows.affectedRows > 0) {
             res.send({ "message": "item deleted" })
         } else {
